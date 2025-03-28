@@ -1,0 +1,14 @@
+{
+  "name": "react",
+  "version": "1.0.0",
+  "description": "This is namaste react by akshey saini",
+  "main": "App.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Atif Afsar",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.14.2"
+  }
+}
