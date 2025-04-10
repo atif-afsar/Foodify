@@ -1,14 +1,29 @@
 {
   "name": "react",
   "version": "1.0.0",
-  "description": "This is namaste react by akshey saini",
+  "description": "This is namaste react by Akshay Saini",
   "main": "App.js",
+  "targets": {
+    "default": {
+      "context": "browser"
+    }
+  },
   "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html",
     "test": "jest"
   },
   "author": "Atif Afsar",
   "license": "ISC",
   "devDependencies": {
-    "parcel": "^2.14.2"
-  }
+    "parcel": "^2.14.4"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.5.0"
+  },
+  "browserslist": [
+    "Last 2 versions"
+  ]
 }
