@@ -1,72 +1,86 @@
 import React, { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { useParams } from "react-router";
-import { MENU_API } from "../Utils/constants";
+import useRestaurantMenu from "../Utils/useRestaurantMenu";
+import RestaurantCategory from "./RestaurantCategory";
+
 const RestaurantMenu = () => {
-  const [resInfo, setResInfo] = useState(null);
+  const { resId } = useParams();
+  const resInfo = useRestaurantMenu(resId);
+
   const [menuItems, setMenuItems] = useState([]);
-  const {resId}  = useParams();
-  
+  const [categories, setCategories] = useState([]);
+  const [showIdx, setShowIdx] = useState(null); // controls which category is open
+
   useEffect(() => {
-    fetchMenu();
-  }, []);
+    if (resInfo) {
+      const regularCards =
+        resInfo?.cards?.find((c) => c.groupedCard)?.groupedCard?.cardGroupMap?.REGULAR?.cards || [];
 
-  const fetchMenu = async () => {
-    const data = await fetch(
-    MENU_API + resId + "&catalog_qa=undefined&submitAction=ENTER"
-    );
-    const json = await data.json();
+      const filteredCategories = regularCards.filter(
+        (c) =>
+          c.card?.card?.["@type"] ===
+          "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+      );
 
-    const resData = json?.data;
-    setResInfo(resData);
+      const allItemCards = filteredCategories.flatMap(
+        (card) => card.card.card.itemCards || []
+      );
 
-    // Find the "REGULAR" section
-    const regularCards =
-      resData?.cards?.find((c) => c.groupedCard)?.groupedCard?.cardGroupMap?.REGULAR?.cards || [];
-
-    // Extract all menu itemCards from relevant cards
-    const allItemCards = regularCards
-      .filter(
-        (card) =>
-          card?.card?.card?.itemCards &&
-          card?.card?.card?.["@type"] === "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
-      )
-      .flatMap((card) => card.card.card.itemCards);
-
-    setMenuItems(allItemCards);
-  };
+      setMenuItems(allItemCards);
+      setCategories(filteredCategories); // ✅ this was missing before
+    }
+  }, [resInfo]);
 
   if (!resInfo) return <Shimmer />;
 
-  // Get restaurant info safely
-  const resCard = resInfo?.cards?.find(
-    (c) => c?.card?.card?.info
-  );
+  // Extract restaurant info
+  const resCard = resInfo?.cards?.find((c) => c?.card?.card?.info);
   const { name, cuisines, costForTwo } = resCard?.card?.card?.info || {};
 
   return (
-    <div className="Menu">
-      <h1>{name}</h1>
-      <h3>{cuisines?.join(", ")} - ₹{costForTwo / 100}</h3>
+    <div className="Menu p-8 bg-gray-50 min-h-screen">
+      {/* Restaurant Info Section */}
+      <div className="restaurant-info text-center mb-10">
+        <h1 className="text-5xl sm:text-6xl font-extrabold text-gray-800 tracking-wide mb-4">
+          🍴 {name}
+        </h1>
+        <h3 className="text-lg sm:text-xl text-gray-500 font-medium">
+          {cuisines?.join(", ")}
+        </h3>
 
-      <h1>Menu</h1>
-      <ul>
-        {menuItems.length > 0 ? (
-          menuItems.map((item, index) => {
-            const info = item?.card?.info;
-            return (
-              <li key={index}>
-                <h4>
-                  {info?.name} - ₹
-                  {(info?.price || info?.defaultPrice) / 100}
-                </h4>
-              </li>
-            );
-          })
-        ) : (
-          <li>No menu items found</li>
-        )}
-      </ul>
+        {/* Welcome Text Card */}
+        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 mt-8 border border-gray-200">
+          <h2 className="text-3xl font-bold text-green-600 text-center mb-4">
+            Indulge in the Finest Flavors ✨
+          </h2>
+          <p className="text-xl text-gray-700 text-center leading-relaxed">
+            Starting at just{" "}
+            <span className="text-green-600 font-semibold">
+              ₹{(costForTwo / 2) / 100}
+            </span>
+            , our dishes are crafted to delight your taste buds.
+          </p>
+          <p className="text-md text-gray-600 text-center mt-3">
+            Whether you're craving a quick bite or a family feast, we’ve got
+            something delicious for everyone.
+          </p>
+        </div>
+      </div>
+
+      {/* Menu Section */}
+      <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
+        Explore Our Menu
+      </h2>
+
+      {categories.map((category, idx) => (
+        <RestaurantCategory
+          key={idx}
+          data={category?.card?.card}
+          showItems={idx === showIdx}
+          setShowIdx={() => setShowIdx(showIdx === idx ? null : idx)}
+        />
+      ))}
     </div>
   );
 };
