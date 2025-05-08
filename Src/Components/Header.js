@@ -16,7 +16,7 @@ const Header = () => {
     <header className="bg-emerald-500 text-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center">
-          <img src={LOGO_URL} alt="Logo" className="w-28 sm:w-36 object-contain" />
+          {/* <img src={LOGO_URL} alt="Logo" className="w-28 sm:w-36 object-contain" />  */}
         </div>
 
         {/* Navigation */}
