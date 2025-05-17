@@ -2,3 +2,6 @@
 /dist/
 /.parcel-cache/
 /data.mdb/
+
+# Local Netlify folder
+.netlify
