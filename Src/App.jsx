@@ -49,7 +49,11 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "/grocery",
-        element: <Suspense fallback ={<h1>Loading.....</h1>}><Grocery/></Suspense>
+        element: (
+          <Suspense fallback={<h1>Loading.....</h1>}>
+            <Grocery/>
+          </Suspense>
+        )
       },
       {
         path:"/cart",
@@ -71,3 +75,6 @@ const appRouter = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(<RouterProvider router={appRouter} />);
+
+// Export for testing purposes
+export default AppLayout;
