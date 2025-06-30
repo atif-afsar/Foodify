@@ -54,8 +54,6 @@ npm install
 npm start
 ```
 
-4. **Open your browser:**
-- Frontend: http://localhost:3000
 
 ---
 
