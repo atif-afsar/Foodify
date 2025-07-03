@@ -4,13 +4,12 @@ import { useSelector } from "react-redux";
 import LOGO_URL from "../Utils/constants.jsx";
 import useOnlineStatus from "../Utils/useOnlineStatus.jsx";
 import { UserContext } from "../Utils/UserContext.jsx";
-import AuthModal from "./AuthModal.jsx";
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const onlineStatus = useOnlineStatus();
-  const { loggedInUser } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const cartItems = useSelector((store) => store.cart?.items) || [];
 
   return (
@@ -29,7 +28,7 @@ const Header = () => {
           <Link to="/grocery" className="hover:text-emerald-200 transition-colors duration-200">Grocery</Link>
         </nav>
 
-        {/* Desktop Cart and Login */}
+        {/* Desktop Cart and User Info */}
         <div className="hidden lg:flex items-center gap-4 text-sm xl:text-base">
           <span className="flex items-center gap-1">
             <span className="hidden xl:inline">Status:</span>
@@ -43,15 +42,17 @@ const Header = () => {
               </span>
             )}
           </Link>
-          <button
-            onClick={() => setShowModal(true)}
-            className="bg-white text-emerald-600 px-4 py-2 rounded-full hover:bg-emerald-100 transition-colors duration-200 font-medium"
-          >
-            Login
-          </button>
-          {loggedInUser && (
-            <span className="text-emerald-100 font-medium">{loggedInUser}</span>
-          )}
+          {user ? (
+            <>
+              <span className="text-emerald-100 font-medium">{user.name || user.email}</span>
+              <button
+                onClick={logout}
+                className="bg-white text-emerald-600 px-4 py-2 rounded-full hover:bg-emerald-100 transition-colors duration-200 font-medium"
+              >
+                Logout
+              </button>
+            </>
+          ) : null}
         </div>
 
         {/* Mobile Menu Button */}
@@ -117,28 +118,27 @@ const Header = () => {
                   <span>Status:</span>
                   {onlineStatus ? "✅" : "🔴"}
                 </span>
-                <button
-                  onClick={() => {
-                    setShowModal(true);
-                    setShowMobileMenu(false);
-                  }}
-                  className="bg-white text-emerald-600 px-4 py-2 rounded-full hover:bg-emerald-100 transition-colors duration-200 font-medium"
-                >
-                  Login
-                </button>
+                {user ? (
+                  <button
+                    onClick={() => {
+                      logout();
+                      setShowMobileMenu(false);
+                    }}
+                    className="bg-white text-emerald-600 px-4 py-2 rounded-full hover:bg-emerald-100 transition-colors duration-200 font-medium"
+                  >
+                    Logout
+                  </button>
+                ) : null}
               </div>
-              {loggedInUser && (
+              {user && (
                 <div className="py-2 text-emerald-100 font-medium">
-                  Welcome, {loggedInUser}
+                  Welcome, {user.name || user.email}
                 </div>
               )}
             </div>
           </nav>
         </div>
       )}
-
-      {/* Auth Modal */}
-      <AuthModal isOpen={showModal} onClose={() => setShowModal(false)} />
     </header>
   );
 };

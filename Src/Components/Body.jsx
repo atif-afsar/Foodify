@@ -90,36 +90,38 @@ const Body = () => {
 
         {/* Search and Filter Section */}
         <div className="w-full max-w-4xl mx-auto mb-8 sm:mb-12 lg:mb-16 px-4">
-          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-4 sm:mb-6  rounded-2xl shadow-xl p-4 sm:p-6 backdrop-blur-md border border-gray-100">
             <input
-              className="w-full sm:w-1/2 px-4 sm:px-5 py-3 sm:py-4 border border-gray-300 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent shadow-lg"
+              className="w-full sm:w-1/2 px-4 sm:px-5 py-3 sm:py-4 border border-gray-200 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent shadow-sm bg-white placeholder-gray-500 text-gray-800 transition-all"
               type="text"
               placeholder="Search for delicious food..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
-            <button
-              onClick={() => {
-                const filtered = listOfRestaurants.filter((res) =>
-                  res.name.toLowerCase().includes(searchText.toLowerCase())
-                );
-                setFilteredRestaurants(filtered);
-              }}
-              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors duration-200 font-medium shadow-lg"
-            >
-              Search
-            </button>
-            <button
-              onClick={() => {
-                const topRated = listOfRestaurants.filter(
-                  (res) => res.avgRating > 4
-                );
-                setFilteredRestaurants(topRated);
-              }}
-              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition-colors duration-200 font-medium shadow-lg"
-            >
-              Top Rated 🍽️
-            </button>
+            <div className="flex w-full sm:w-auto gap-3 mt-2 sm:mt-0">
+              <button
+                onClick={() => {
+                  const filtered = listOfRestaurants.filter((res) =>
+                    res.name.toLowerCase().includes(searchText.toLowerCase())
+                  );
+                  setFilteredRestaurants(filtered);
+                }}
+                className="flex-1 sm:flex-none px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-emerald-500 to-emerald-400 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-500 transition-all duration-200 font-semibold shadow-md text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
+              >
+                Search
+              </button>
+              <button
+                onClick={() => {
+                  const topRated = listOfRestaurants.filter(
+                    (res) => res.avgRating > 4
+                  );
+                  setFilteredRestaurants(topRated);
+                }}
+                className="flex-1 sm:flex-none px-6 sm:px-8 py-3 sm:py-4 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-500 transition-all duration-200 font-semibold shadow-md text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              >
+                Top Rated 🍽️
+              </button>
+            </div>
           </div>
           
           {/* Clear Filter Button */}
@@ -129,7 +131,7 @@ const Body = () => {
                 setFilteredRestaurants(listOfRestaurants);
                 setSearchText("");
               }}
-              className="text-emerald-200 hover:text-white transition-colors duration-200 text-sm underline"
+              className="mt-2 sm:mt-3 px-4 py-2 border-2 border-emerald-400 text-emerald-600 font-semibold rounded-lg bg-transparent hover:bg-emerald-200/30 hover:text-emerald-700 transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200"
             >
               Clear filters
             </button>

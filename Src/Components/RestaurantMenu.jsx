@@ -46,7 +46,11 @@ const RestaurantMenu = () => {
 
   // Extract restaurant info
   const resCard = resInfo?.cards?.find((c) => c?.card?.card?.info);
-  const { name, cuisines, costForTwo } = resCard?.card?.card?.info || {};
+  let { name, cuisines, costForTwo } = resCard?.card?.card?.info || {};
+  // Use a default value if costForTwo is missing or invalid
+  if (typeof costForTwo !== "number" || isNaN(costForTwo)) {
+    costForTwo = 40000; // default to 400.00 rupees
+  }
 
   return (
     <div className="Menu p-8 bg-gray-50 min-h-screen">
@@ -67,7 +71,7 @@ const RestaurantMenu = () => {
           <p className="text-xl text-gray-700 text-center leading-relaxed">
             Starting at just{" "}
             <span className="text-green-600 font-semibold">
-              ₹{(costForTwo / 2) / 100}
+              ₹{(costForTwo / 2 / 100).toFixed(0)}
             </span>
             , our dishes are crafted to delight your taste buds.
           </p>
